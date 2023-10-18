@@ -1,0 +1,48 @@
+import pacientes.*
+import aparatos.*
+
+describe "Pacientes"{
+	const leonardo = new Paciente(edad=40, fortaleza=20, dolor=10)
+	const milena = new Paciente(edad=3, fortaleza=50, dolor=30)
+	
+	const magneto1 =  new Magneto()
+	const bici1 = new Bicicleta()
+	const mini1 = new Minitramp()
+	
+	test "Leonardo puede usar los 3 aparatos"{
+		
+		assert.that(magneto1.puedeUsar(leonardo))
+		assert.that(bici1.puedeUsar(leonardo))
+		assert.that(mini1.puedeUsar(leonardo))
+	}
+	
+	test "Milena puede usar magneto"{
+		assert.that(magneto1.puedeUsar(milena))
+	}
+	
+	test "Milena no puede usar ni bici ni mini"{
+		assert.notThat(bici1.puedeUsar(milena))
+		assert.notThat(mini1.puedeUsar(milena))
+	}
+	
+	test "Leonardo usa magneto una vez y nivel de dolor 9"{
+		leonardo.usarAparato(magneto1)
+		assert.equals(9, leonardo.dolor())
+	}
+	
+	test "Milena usa magneto una vez y nivel de dolor 27"{
+		milena.usarAparato(magneto1)
+		assert.equals(27,milena.dolor())
+	}
+	
+	test "Leonardo usa bicicleta una vez y nivel de dolor baja a 6 y fortaleza sube a 23"{
+		leonardo.usarAparato(bici1)
+		assert.equals(6,leonardo.dolor())
+		assert.equals(23,leonardo.fortaleza())
+	}
+	
+	test "Leonardo usa mini y fortaleza sube a 24"{
+		leonardo.usarAparato(mini1)
+		assert.equals(24,leonardo.fortaleza())
+	}
+}

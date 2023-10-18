@@ -1,0 +1,39 @@
+import rutinas.*
+import pacientes.*
+import aparatos.*
+
+describe "Pacientes"{
+	const leonardo = new Paciente(edad=40, fortaleza=20, dolor=10)
+	const milena = new Paciente(edad=3, fortaleza=50, dolor=30)
+	
+	const magneto1 =  new Magneto()
+	const bici1 = new Bicicleta()
+	const mini1 = new Minitramp()
+	
+	const aparatos = [bici1, mini1, bici1, magneto1]
+	
+	const rutinaLeo = new Rutina(paciente=leonardo)
+	const rutinaM = new Rutina(paciente=milena)
+	
+	test "Leonardo puede hacer la rutina que tiene asignada"{
+	rutinaLeo.cargarAparatos(aparatos)
+	assert.that(rutinaLeo.puedeHacerRutina())
+	
+	}
+	
+	test "Leonardo hace la rutina, dolor 1,8 - fortaleza 30"{
+		rutinaLeo.cargarAparatos(aparatos)
+		rutinaLeo.hacerRutina()
+		
+		assert.equals(1.8, leonardo.dolor())
+		assert.equals(30, leonardo.fortaleza())	
+	}
+	
+	test "Milena no puede hacer la rutina"{
+		rutinaM.cargarAparatos(aparatos)
+		
+		assert.notThat(rutinaM.puedeHacerRutina())
+	}
+	
+	
+}
