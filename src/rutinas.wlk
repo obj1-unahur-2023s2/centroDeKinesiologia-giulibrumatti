@@ -20,5 +20,5 @@ class Rutina {
 	
 	method cantidadDeAparatos() = aparatos.size()
 	
-	
+	method hayAparatoDeColor(color) = aparatos.any({a => a.color() == color})
 }
