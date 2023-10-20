@@ -3,55 +3,70 @@ import pacientes.*
 
 class Aparato {
 	
-	var property color = "blanco"
+	const property color = "blanco"
+	
+	method valorQueSumaFortaleza(unPaciente) = 0
+	
+	method valorRestaDolor(unPaciente) = 0
 
-	method efectoEnDolor(paciente)
+	method puedeUsar(unPaciente) = true
 	
-	method efectoFortaleza(paciente)
+	method efectoDelUso(unPaciente)
 	
-	method puedeUsar(paciente)
+	method necesitaMantenimiento() = false
 	
+	method recibirMantenimiento(){}
 	
 }
 
 class Magneto inherits Aparato{
+	var imantacion = 800
 	
-	override method efectoEnDolor(paciente) = paciente.modificarDolor(paciente.dolor() * 0.9)
+	override method valorRestaDolor(unPaciente) = unPaciente.dolor() * 0.1
 	
-	override method puedeUsar(paciente) = true
-	
-	override method efectoFortaleza(paciente) =  paciente.fortaleza()
-	
-	override method color(nuevoColor){
-		color = nuevoColor
+	override method efectoDelUso(unPaciente) {
+		imantacion = 0.max(imantacion - 1)
 	}
+	override method necesitaMantenimiento() = imantacion < 100
 	
+	override method recibirMantenimiento(){
+		imantacion = 800.min(imantacion + 500) 
+	}
 }
 
 class Bicicleta inherits Aparato{
+	var cantTornillos = 0
+	var cantAceite = 0
 	
-	override method efectoEnDolor(paciente) = paciente.modificarDolor(paciente.dolor() - 4)
+	override method valorRestaDolor(unPaciente) =  4
 	
-	override method efectoFortaleza(paciente) = paciente.modificarFortaleza(paciente.fortaleza() + 3)
+	override method valorQueSumaFortaleza(unPaciente) = 3
 	
-	override method puedeUsar(paciente) = paciente.edad() > 8
+	override method puedeUsar(unPaciente) = unPaciente.edad() > 8
 	
-	override method color(nuevoColor){
-		color = nuevoColor
+	override method efectoDelUso(unPaciente){
+		if(unPaciente.dolor() > 30){
+			cantTornillos ++
+		}
+		
+		if(unPaciente.edad().between(30,50)){
+			cantAceite++
+		}
 	}
+	override method necesitaMantenimiento() = cantTornillos >= 10 || cantAceite >= 5
 	
+	override method recibirMantenimiento(){
+		cantTornillos = 0
+		cantAceite = 0
+	}
 }
 
 class Minitramp inherits Aparato{
 	
-	override method efectoEnDolor(paciente) = paciente.dolor()
+	override method valorQueSumaFortaleza(unPaciente) = unPaciente.edad() * 0.1
 	
-	override method efectoFortaleza(paciente) = paciente.modificarFortaleza(paciente.fortaleza() + (paciente.edad() * 0.1))
+	override method puedeUsar(unPaciente) = unPaciente.dolor() < 20
 	
-	override method puedeUsar(paciente) = paciente.dolor() < 20
-	
-	override method color(nuevoColor){
-		color = nuevoColor
-	}
-	
+	override method efectoDelUso(unPaciente){}
+
 }

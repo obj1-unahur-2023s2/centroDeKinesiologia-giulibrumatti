@@ -1,59 +1,72 @@
 
 
 class Paciente {
-	var edad
+	const property edad
 	var fortaleza
 	var dolor
-	
-	method edad() = edad
-	
+	const rutina = []
+		
 	method fortaleza() = fortaleza
 	
 	method dolor() = dolor
-	
-	method modificarDolor(nuevoDolor){
-		dolor = nuevoDolor
-	}
-	
-	method modificarFortaleza(nuevaFort) {
-		fortaleza = nuevaFort
-	}
+
+	method sePuedeUsar(aparato) = aparato.puedeUsar(self)
 	
 	method usarAparato(aparato){
-		aparato.efectoEnDolor(self)
-		aparato.efectoFortaleza(self)
+		if(!self.sePuedeUsar(aparato)){
+			self.error("El paciente no puede usar ese aparato")
+		}
+		aparato.efectoDelUso(self)
+		fortaleza += aparato.valorQueSumaFortaleza(self)
+		dolor = 0.max(dolor - aparato.valorRestaDolor(self))
 	}
 	
-	method puedeHacerEjercicio(rutina) = rutina.puedeHacerRutina() && self.condicionAdicional(rutina)
+	method asignarRutina(listaAparato){
+		rutina.addAll(listaAparato)
+	}
 	
-	method condicionAdicional(rutina) = false
+	method realizarRutina() {
+		if(!self.puedeRealizarRutina()){
+			self.error("El paciente no puede hacer rutina porque tiene aparatos que no puede usar")
+		}
+		rutina.forEach({a => self.usarAparato(a)})
+	}
 	
-	method hacerEjercicio(rutina) {
-		rutina.hacerRutina()
-	} 
+	method puedeRealizarRutina() = rutina.all({a => self.sePuedeUsar(a)})
+	
+	method cantidadDeAparatosEnRutina() = rutina.size()
+	
 }
 
 class Resistente inherits Paciente{
 	
-	override method usarAparato(aparato){
-		super(aparato)
-		fortaleza = fortaleza + 1
+	override method realizarRutina(){
+		super()
+		fortaleza += self.cantidadDeAparatosEnRutina()
 	}
 }
 
 class Caprichoso inherits Paciente{
 	
-	override method condicionAdicional(rutina) = rutina.hayAparatoDeColor("rojo")
-	override method hacerEjercicio(rutina){
-		super(rutina)
-		rutina.hacerRutina(rutina)
+	override method realizarRutina(){
+		//(1..2).forEach({e => super()})
+		super()
+		super()
 	}
+	
+	override method puedeRealizarRutina() = super() && self.hayAparatoDeColor("rojo")
+	
+	method hayAparatoDeColor(color) = rutina.any({a => a.color() == color})
 }
 
 class RapidaRecuperacion inherits Paciente{
 	
-	override method hacerEjercicio(rutina){
-		super(rutina)
-		self.modificarDolor(self.dolor() - 3)
+	override method realizarRutina(){
+		super()
+		dolor = 0.max(dolor - coeficienteRecuperacion.valor())
 	}
+}
+
+object coeficienteRecuperacion{
+	var property valor = 3
 }

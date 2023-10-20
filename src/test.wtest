@@ -1,0 +1,181 @@
+import pacientes.*
+import aparatos.*
+
+describe "Test parte 1"{
+	const leonardo = new Paciente(edad=40, fortaleza=20, dolor=10)
+	const milena = new Paciente(edad=3, fortaleza=50, dolor=30)
+	
+	const magneto1 =  new Magneto()
+	const bici1 = new Bicicleta()
+	const mini1 = new Minitramp()
+	
+	test "Leonardo puede usar magneto"{
+		assert.that(leonardo.sePuedeUsar(magneto1))
+	}
+	
+	test "Leonardo puede usar bici"{
+		assert.that(leonardo.sePuedeUsar(bici1))
+	}
+	
+	test "Leonardo puede usar minitramp"{
+		assert.that(leonardo.sePuedeUsar(mini1))
+	}
+	
+	test "Milena puede usar magneto"{
+		assert.that(milena.sePuedeUsar(magneto1))
+	}
+	
+	test "Milena no puede usar mini"{
+
+		assert.notThat(milena.sePuedeUsar(mini1))
+	}
+	
+	test "Milena no puede usar bici"{
+		assert.notThat(milena.sePuedeUsar(bici1))
+	}
+	
+	test "Leonardo usa magneto una vez y nivel de dolor 9"{
+		leonardo.usarAparato(magneto1)
+		assert.equals(9, leonardo.dolor())
+	}
+	
+	test "Milena usa magneto una vez y nivel de dolor 27"{
+		milena.usarAparato(magneto1)
+		assert.equals(27,milena.dolor())
+	}
+	
+	test "Leonardo usa bicicleta una vez y nivel de dolor baja a 6 y fortaleza sube a 23"{
+		leonardo.usarAparato(bici1)
+		assert.equals(6,leonardo.dolor())
+		assert.equals(23,leonardo.fortaleza())
+	}
+	
+	test "Leonardo usa mini y fortaleza sube a 24"{
+		leonardo.usarAparato(mini1)
+		assert.equals(24,leonardo.fortaleza())
+	}
+}
+
+describe "Test parte 2"{
+	const leonardo = new Paciente(edad=40, fortaleza=20, dolor=10)
+	const milena = new Paciente(edad=3, fortaleza=50, dolor=30)
+	
+	const magneto1 =  new Magneto()
+	const bici1 = new Bicicleta()
+	const mini1 = new Minitramp()
+	
+	const rutinaLeo = [bici1, mini1, bici1, magneto1]
+	const rutinaM = [magneto1, bici1]
+	
+	method inicializar(){
+		leonardo.asignarRutina(rutinaLeo)
+		milena.asignarRutina(rutinaM)
+	}
+	
+	test "Leonardo puede hacer la rutina que tiene asignada"{
+		self.inicializar()
+		assert.that(leonardo.puedeRealizarRutina())
+	}
+	
+	test "Leonardo hace la rutina, dolor 1.8"{
+		self.inicializar()
+		leonardo.realizarRutina()
+		assert.equals(1.8, leonardo.dolor())
+	}
+	
+	test "Leonardo hace la rutina, fortaleza 30"{
+		self.inicializar()
+		leonardo.realizarRutina()
+		assert.equals(30, leonardo.fortaleza())	
+	}
+	
+	test "Milena no puede hacer la rutina"{
+		self.inicializar()
+		assert.notThat(milena.puedeRealizarRutina())
+	}
+	
+	test "milena no puede realizar la rutina, arroja exception"{
+		self.inicializar()
+		assert.throwsException({milena.realizarRutina()})
+	}	
+}
+
+describe "Test parte 3"{
+	const nico = new Resistente(edad=40, fortaleza=20, dolor=10)
+	const victoria = new Caprichoso(edad=30, fortaleza=40, dolor=10)
+	const juli = new Caprichoso(edad=20, fortaleza=50, dolor=54)
+	const zoe = new RapidaRecuperacion(edad=50, fortaleza=40, dolor=14)
+	
+	const magneto1 =  new Magneto()
+	const bici1 = new Bicicleta()
+	const mini1 = new Minitramp()
+	const biciRoja = new Bicicleta(color="rojo")
+	const magVerde = new Magneto(color="verde")
+	
+	
+	const aparatosRuti1 = [bici1, mini1, bici1, magneto1]
+	const apaRuti2 = [biciRoja, magVerde, bici1]
+	
+	method initializate(){
+		nico.asignarRutina(aparatosRuti1)
+		victoria.asignarRutina(aparatosRuti1)
+		juli.asignarRutina(apaRuti2)
+		zoe.asignarRutina(aparatosRuti1)
+		coeficienteRecuperacion.valor(2)
+	}
+	
+	test "Nicolas puede hacer rutina"{
+		self.initializate()
+		assert.that(nico.puedeRealizarRutina())
+	}
+	test "Nicolas dolor 1,8"{
+		self.initializate()
+		nico.realizarRutina()
+		assert.equals(1.8, nico.dolor())
+	}
+	
+	test "Nicolas Fortaleza 34"{
+		self.initializate()
+		nico.realizarRutina()
+		assert.equals(34, nico.fortaleza())
+	}
+	
+	test "Victoria no puede hacer rutina"{
+		self.initializate()
+		assert.notThat(victoria.puedeRealizarRutina())
+	}
+	
+	test "Julian puede hacer rutina"{
+		self.initializate()
+		assert.that(juli.puedeRealizarRutina())
+	}
+	
+	test "Julian dolor 29.3"{
+		self.initializate()
+		juli.realizarRutina()
+		assert.equals(29.3, juli.dolor())
+	}
+	
+	test "Julian fortaleza 62"{
+		self.initializate()
+		juli.realizarRutina()
+		assert.equals(62, juli.fortaleza())
+	}
+	
+	test "Zoe puede hacer rutina"{
+		self.initializate()
+		assert.that(zoe.puedeRealizarRutina())
+	}
+	
+	test "Zoe dolor 3.4"{
+		self.initializate()
+		zoe.realizarRutina()
+		assert.equals(3.4, zoe.dolor())		
+	}
+	
+	test "Zoe fortaleza 51"{
+		self.initializate()
+		zoe.realizarRutina()
+		assert.equals(51, zoe.fortaleza())	
+	}
+}
